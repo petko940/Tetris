@@ -1,4 +1,6 @@
 import random
+import time
+
 import pygame
 from figures import *
 
@@ -14,7 +16,7 @@ COLS = 10
 class Tetris:
     def __init__(self):
         self.s_key_pressed = False
-        self.FALL_SPEED = 100
+        self.FALL_SPEED = 30
 
         self.fallen_pieces = []
         self.current_piece_color = None
@@ -29,6 +31,19 @@ class Tetris:
 
         self.current_figure_to_rotate = None
         self.current_figure = None
+
+        self.rotate_pieces = {figure_keys[0]: deque([FIGURES[0], FIGURES[1]]),
+                              figure_keys[1]: deque([FIGURES[2], FIGURES[3], FIGURES[4], FIGURES[5]]),
+                              figure_keys[2]: deque([FIGURES[6], FIGURES[7]]),
+                              figure_keys[3]: deque([FIGURES[8], FIGURES[9]]),
+                              figure_keys[4]: deque([FIGURES[10], FIGURES[11], FIGURES[12], FIGURES[13]]),
+                              figure_keys[5]: deque([FIGURES[14], FIGURES[15], FIGURES[16], FIGURES[17]]),
+                              figure_keys[6]: deque([FIGURES[18]])}
+
+        self.points = 0
+
+        self.timer = 0
+        self.timer_interval = 1000
 
     def draw_board(self):
         for row in range(ROWS):
@@ -86,15 +101,6 @@ class Tetris:
         }
         self.current_piece_color = FIGURES_COLOR[self.current_piece['shape']]
 
-        shape = self.current_piece['shape']
-        # print(FIGURES[shape])
-
-        for key, value in rotate_piece.items():
-            if FIGURES[shape] in value:
-                self.current_figure = FIGURES[shape]
-                self.current_figure_to_rotate = key
-                break
-
     def move_piece_down(self):
         if self.current_piece is not None:
             new_y = self.current_piece['y'] + 1
@@ -142,12 +148,12 @@ class Tetris:
             if self.s_key_pressed:
                 self.FALL_SPEED = 2
             else:
-                self.FALL_SPEED = 20
+                self.FALL_SPEED = 30
 
             if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
                 self.current_piece['x'] = new_x
         else:
-            self.FALL_SPEED = 20
+            self.FALL_SPEED = 30
 
     def filled_line(self):
         filled_lines = []
@@ -157,34 +163,22 @@ class Tetris:
         if filled_lines:
             for x in filled_lines:
                 del self.game_board[x]
-                self.game_board.insert(0, [0  for _ in range(len(self.game_board[0]))])
+                self.game_board.insert(0, [0 for _ in range(len(self.game_board[0]))])
         return filled_lines
 
     def rotate_piece(self):
-        if self.current_figure_to_rotate is not None:
-            shape_deque = rotate_piece[self.current_figure_to_rotate]
-            print(shape_deque[0])
-            print(self.current_figure)
-            while True:
-                if shape_deque[0] == self.current_figure:
-                    shape_deque.rotate(1)
-                elif shape_deque[0] != self.current_figure:
-                    break
+        rotate_times = 0
+        for x in self.rotate_pieces[self.current_figure_to_rotate]:
+            if x == self.current_figure:
+                break
+            rotate_times += 1
 
-            new_shape = shape_deque[0]
+        self.rotate_pieces[self.current_figure_to_rotate].rotate(-rotate_times - 1)
 
-            for index, value in enumerate(FIGURES):
-                if new_shape == value:
-                    new_shape = index
-                    break
+        new_shape = self.rotate_pieces[self.current_figure_to_rotate][0]
+        self.current_piece['shape'] = FIGURES.index(new_shape)
 
-            new_x, new_y = self.current_piece['x'], self.current_piece['y']
-
-            self.current_piece['shape'] = new_shape
-            self.current_piece['x'] = new_x
-            self.current_piece['y'] = new_y
-
-            self.draw_board()
+        self.draw_board()
 
     def run(self):
         self.spawn_piece()
@@ -225,13 +219,21 @@ class Tetris:
 
             filled_lines = self.filled_line()
             if filled_lines:
-                print("score")
-
-            pygame.display.flip()
-            self.clock.tick(60)
+                self.points += len(filled_lines)
+                print("score: " , self.points)
 
             if self.current_piece is None:
                 self.spawn_piece()
+
+            shape = self.current_piece['shape']
+            for key, value in rotate_piece.items():
+                if FIGURES[shape] in value:
+                    self.current_figure = FIGURES[shape]
+                    self.current_figure_to_rotate = key
+                    break
+
+            pygame.display.flip()
+            self.clock.tick(60)
 
 
 game = Tetris()
