@@ -1,6 +1,4 @@
 import random
-import time
-
 import pygame
 from figures import *
 
@@ -41,9 +39,6 @@ class Tetris:
                               figure_keys[6]: deque([FIGURES[18]])}
 
         self.points = 0
-
-        self.timer = 0
-        self.timer_interval = 1000
 
     def draw_board(self):
         for row in range(ROWS):
@@ -160,10 +155,12 @@ class Tetris:
         for i, row in enumerate(self.game_board):
             if 0 not in row:
                 filled_lines.append(i)
+
         if filled_lines:
             for x in filled_lines:
                 del self.game_board[x]
                 self.game_board.insert(0, [0 for _ in range(len(self.game_board[0]))])
+
         return filled_lines
 
     def rotate_piece(self):
@@ -176,8 +173,15 @@ class Tetris:
         self.rotate_pieces[self.current_figure_to_rotate].rotate(-rotate_times - 1)
 
         new_shape = self.rotate_pieces[self.current_figure_to_rotate][0]
-        self.current_piece['shape'] = FIGURES.index(new_shape)
+        new_x, new_y = self.current_piece['x'], self.current_piece['y']
+        if new_x < 0:
+            new_x = 0
+        elif new_x + len(new_shape[0]) > COLS:
+            new_x = COLS - len(new_shape[0])
 
+        self.current_piece['shape'] = FIGURES.index(new_shape)
+        self.current_piece['x'] = new_x
+        self.current_piece['y'] = new_y
         self.draw_board()
 
     def run(self):
@@ -220,13 +224,13 @@ class Tetris:
             filled_lines = self.filled_line()
             if filled_lines:
                 self.points += len(filled_lines)
-                print("score: " , self.points)
+                print("score: ", self.points)
 
             if self.current_piece is None:
                 self.spawn_piece()
 
             shape = self.current_piece['shape']
-            for key, value in rotate_piece.items():
+            for key, value in self.rotate_pieces.items():
                 if FIGURES[shape] in value:
                     self.current_figure = FIGURES[shape]
                     self.current_figure_to_rotate = key
