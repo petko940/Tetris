@@ -9,6 +9,7 @@ SCREEN_HEIGHT = 501
 BLOCK_SIZE = 25
 ROWS = 20
 COLS = 10
+WHITE = (255, 255, 255)
 
 
 class Tetris:
@@ -17,7 +18,12 @@ class Tetris:
         self.FALL_SPEED = 30
 
         self.fallen_pieces = []
+
+        self.previous_pieces_color = None
         self.current_piece_color = None
+
+        self.next_piece = None
+        self.next_piece_color = None
 
         self.current_piece = None
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -65,13 +71,13 @@ class Tetris:
                     )
 
         if self.current_piece is not None:
-            self.draw_figure(
+            self.draw_current_figure(
                 self.current_piece['shape'],
                 self.current_piece['x'],
                 self.current_piece['y']
             )
 
-    def draw_figure(self, figure, x, y):
+    def draw_current_figure(self, figure, x, y):
         shape = FIGURES[figure]
         for row in range(len(shape)):
             for col in range(len(shape[0])):
@@ -88,22 +94,46 @@ class Tetris:
                         rect,
                     )
 
+    def draw_next_piece(self, next_piece):
+        next_piece_color = FIGURES_COLOR[next_piece['shape']]
+        shape = FIGURES[next_piece['shape']]
+        for row in range(len(shape)):
+            for col in range(len(shape[0])):
+                if shape[row][col]:
+                    rect = pygame.Rect(
+                        (col + COLS + 2) * BLOCK_SIZE,
+                        (row + 4) * BLOCK_SIZE,
+                        BLOCK_SIZE,
+                        BLOCK_SIZE,
+                    )
+                    pygame.draw.rect(
+                        self.screen,
+                        next_piece_color,
+                        rect,
+                    )
+
     def spawn_piece(self):
         self.current_piece = {
+            'shape': self.next_piece['shape'],
+            'x': COLS // 2,
+            'y': 0,
+        }
+        self.current_piece_color = self.next_piece_color
+
+        self.next_piece = {
             'shape': random.randint(0, len(FIGURES) - 1),
             'x': COLS // 2,
             'y': 0,
         }
-        self.current_piece_color = FIGURES_COLOR[self.current_piece['shape']]
+        self.next_piece_color = FIGURES_COLOR[self.next_piece['shape']]
 
     def move_piece_down(self):
-        if self.current_piece is not None:
-            new_y = self.current_piece['y'] + 1
-            if not self.check_collision(self.current_piece['shape'], self.current_piece['x'], new_y):
-                self.current_piece['y'] = new_y
-            else:
-                self.lock_piece()
-                self.spawn_piece()
+        new_y = self.current_piece['y'] + 1
+        if not self.check_collision(self.current_piece['shape'], self.current_piece['x'], new_y):
+            self.current_piece['y'] = new_y
+        else:
+            self.lock_piece()
+            self.spawn_piece()
 
     def check_collision(self, figure, x, y):
         shape = FIGURES[figure]
@@ -123,19 +153,18 @@ class Tetris:
                 if shape[row][col]:
                     self.game_board[y + row][x + col] = color
 
+        self.previous_pieces_color = self.current_piece_color
         self.current_piece_color = FIGURES_COLOR[self.current_piece['shape']]
 
     def move_piece_left(self):
-        if self.current_piece is not None:
-            new_x = self.current_piece['x'] - 1
-            if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
-                self.current_piece['x'] = new_x
+        new_x = self.current_piece['x'] - 1
+        if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
+            self.current_piece['x'] = new_x
 
     def move_piece_right(self):
-        if self.current_piece is not None:
-            new_x = self.current_piece['x'] + 1
-            if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
-                self.current_piece['x'] = new_x
+        new_x = self.current_piece['x'] + 1
+        if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
+            self.current_piece['x'] = new_x
 
     def fast_down(self):
         if self.current_piece is not None:
@@ -157,11 +186,26 @@ class Tetris:
                 filled_lines.append(i)
 
         if filled_lines:
+            self.destroy_effect(filled_lines)
             for x in filled_lines:
                 del self.game_board[x]
                 self.game_board.insert(0, [0 for _ in range(len(self.game_board[0]))])
 
         return filled_lines
+
+    def destroy_effect(self, rows):
+        for row in rows:
+            self.game_board[row] = [self.previous_pieces_color for _ in range(COLS)]
+
+        self.draw_board()
+        pygame.display.flip()
+        pygame.time.delay(200)
+
+        for row in rows:
+            self.game_board[row] = [0 for _ in range(COLS)]
+
+        self.draw_board()
+        pygame.display.flip()
 
     def rotate_piece(self):
         rotate_times = 0
@@ -185,6 +229,16 @@ class Tetris:
         self.draw_board()
 
     def run(self):
+        font = pygame.font.Font(None, 36)
+        text = font.render("Next", True, WHITE)
+
+        self.next_piece = {
+            'shape': random.randint(0, len(FIGURES) - 1),
+            'x': COLS // 2,
+            'y': 0,
+        }
+        self.next_piece_color = FIGURES_COLOR[self.next_piece['shape']]
+
         self.spawn_piece()
         while True:
             for event in pygame.event.get():
@@ -210,7 +264,7 @@ class Tetris:
 
             self.screen.fill((0, 0, 0))
             self.draw_board()
-            self.draw_figure(
+            self.draw_current_figure(
                 self.current_piece['shape'],
                 self.current_piece['x'],
                 self.current_piece['y'],
@@ -235,6 +289,9 @@ class Tetris:
                     self.current_figure = FIGURES[shape]
                     self.current_figure_to_rotate = key
                     break
+
+            self.screen.blit(text, (300, 50))
+            self.draw_next_piece(self.next_piece)
 
             pygame.display.flip()
             self.clock.tick(60)
