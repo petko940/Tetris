@@ -19,48 +19,48 @@ FIGURES = [
     [[1, 0],
      [1, 1],
      [1, 0]],
-    #
-    # # Z
-    # [[0, 1],
-    #  [1, 1],
-    #  [1, 0]],
-    # [[1, 1, 0],
-    #  [0, 1, 1]],
-    #
-    # # S
-    # [[0, 1, 1],
-    #  [1, 1, 0]],
-    # [[1, 0],
-    #  [1, 1],
-    #  [0, 1]],
-    #
-    # # L
-    # [[1, 1, 1],
-    #  [0, 0, 1]],
-    # [[1, 1],
-    #  [1, 0],
-    #  [1, 0]],
-    # [[1, 0, 0],
-    #  [1, 1, 1]],
-    # [[0, 1],
-    #  [0, 1],
-    #  [1, 1]],
-    #
-    # # J
-    # [[1, 1, 1],
-    #  [1, 0, 0]],
-    # [[1, 0],
-    #  [1, 0],
-    #  [1, 1]],
-    # [[0, 0, 1],
-    #  [1, 1, 1]],
-    # [[1, 1],
-    #  [0, 1],
-    #  [0, 1]],
-    #
-    # # O
-    # [[1, 1],
-    #  [1, 1]],
+
+    # Z
+    [[0, 1],
+     [1, 1],
+     [1, 0]],
+    [[1, 1, 0],
+     [0, 1, 1]],
+
+    # S
+    [[0, 1, 1],
+     [1, 1, 0]],
+    [[1, 0],
+     [1, 1],
+     [0, 1]],
+
+    # L
+    [[1, 1, 1],
+     [0, 0, 1]],
+    [[1, 1],
+     [1, 0],
+     [1, 0]],
+    [[1, 0, 0],
+     [1, 1, 1]],
+    [[0, 1],
+     [0, 1],
+     [1, 1]],
+
+    # J
+    [[1, 1, 1],
+     [1, 0, 0]],
+    [[1, 0],
+     [1, 0],
+     [1, 1]],
+    [[0, 0, 1],
+     [1, 1, 1]],
+    [[1, 1],
+     [0, 1],
+     [0, 1]],
+
+    # O
+    [[1, 1],
+     [1, 1]],
 ]
 
 rotate_piece = {}
@@ -68,11 +68,11 @@ figure_keys = ['I', 'T', 'Z', 'S', 'L', 'J', 'O']
 
 rotate_piece[figure_keys[0]] = deque([FIGURES[0], FIGURES[1]])
 rotate_piece[figure_keys[1]] = deque([FIGURES[2], FIGURES[3], FIGURES[4], FIGURES[5]])
-# rotate_piece[figure_keys[2]] = deque([FIGURES[6], FIGURES[7]])
-# rotate_piece[figure_keys[3]] = deque([FIGURES[8], FIGURES[9]])
-# rotate_piece[figure_keys[4]] = deque([FIGURES[10], FIGURES[11], FIGURES[12], FIGURES[13]])
-# rotate_piece[figure_keys[5]] = deque([FIGURES[14], FIGURES[15], FIGURES[16], FIGURES[17]])
-# rotate_piece[figure_keys[6]] = deque([FIGURES[18]])
+rotate_piece[figure_keys[2]] = deque([FIGURES[6], FIGURES[7]])
+rotate_piece[figure_keys[3]] = deque([FIGURES[8], FIGURES[9]])
+rotate_piece[figure_keys[4]] = deque([FIGURES[10], FIGURES[11], FIGURES[12], FIGURES[13]])
+rotate_piece[figure_keys[5]] = deque([FIGURES[14], FIGURES[15], FIGURES[16], FIGURES[17]])
+rotate_piece[figure_keys[6]] = deque([FIGURES[18]])
 
 
 FIGURES_COLOR = [
