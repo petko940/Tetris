@@ -16,8 +16,9 @@ WHITE = (255, 255, 255)
 
 class Tetris:
     def __init__(self):
-        self.s_key_pressed = None
         self.FALL_SPEED = 30
+
+        self.s_key_pressed = None
 
         self.fallen_pieces = []
 
@@ -157,6 +158,7 @@ class Tetris:
 
         self.previous_pieces_color = self.current_piece_color
         self.current_piece_color = FIGURES_COLOR[self.current_piece['shape']]
+        self.score(0)
 
     def move_piece_left(self):
         new_x = self.current_piece['x'] - 1
@@ -222,10 +224,23 @@ class Tetris:
         elif new_x + len(new_shape[0]) > COLS:
             new_x = COLS - len(new_shape[0])
 
+        if new_y + len(new_shape) > ROWS:
+            new_y = ROWS - len(new_shape)
+
         self.current_piece['shape'] = FIGURES.index(new_shape)
         self.current_piece['x'] = new_x
         self.current_piece['y'] = new_y
         self.draw_board()
+
+    def score(self, lines):
+        scores = {
+            0: 10,
+            1: 100,
+            2: 200,
+            3: 300,
+            4: 400,
+        }
+        self.points += scores[lines]
 
     def run(self):
         font = pygame.font.Font(None, 36)
@@ -241,7 +256,7 @@ class Tetris:
 
         self.spawn_piece()
 
-        time_since_last_move_lr = 0  # Add this line
+        time_since_last_move_lr = 0
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -287,8 +302,7 @@ class Tetris:
 
             filled_lines = self.filled_line()
             if filled_lines:
-                self.points += len(filled_lines)
-                print("score: ", self.points)
+                self.score(len(filled_lines))
 
             if self.current_piece is None:
                 self.spawn_piece()
