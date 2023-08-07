@@ -242,9 +242,15 @@ class Tetris:
         }
         self.points += scores[lines]
 
+    def draw_score(self):
+        font = pygame.font.Font(None, 45)
+        score_str = str(self.points).zfill(6)
+        text_points = font.render(score_str, True, WHITE)
+        self.screen.blit(text_points, (270, 250))
+
     def run(self):
         font = pygame.font.Font(None, 36)
-        text = font.render("Next", True, WHITE)
+        text_next = font.render("Next", True, WHITE)
         start_time = time.time()
 
         self.next_piece = {
@@ -314,17 +320,19 @@ class Tetris:
                     self.current_figure_to_rotate = key
                     break
 
-            self.screen.blit(text, (300, 50))
+            self.screen.blit(text_next, (300, 50))
             self.draw_next_piece(self.next_piece)
 
+            self.draw_score()
             '''temp'''
             current_time = time.time()
             elapsed_time = current_time - start_time
             timer_text = f"Time: {elapsed_time} seconds"  # Convert to int to remove decimals
 
             font = pygame.font.Font(None, 36)
-            timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text
+            timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
             self.screen.blit(timer_surface, (250, 10))
+            ''''''
 
             pygame.display.flip()
             self.clock.tick(60)
