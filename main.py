@@ -286,24 +286,24 @@ class Tetris:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         exit()
-                    elif event.key == pygame.K_s:
+                    elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                         self.s_key_pressed = True
                         self.fast_down()
                     elif event.key == pygame.K_SPACE:
                         self.rotate_piece()
 
                 elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_s:
+                    if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                         self.s_key_pressed = False
                         self.fast_down()
 
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_a]:
+            if keys[pygame.K_a] or keys[pygame.K_LEFT]:
                 current_time = pygame.time.get_ticks()
                 if current_time - time_since_last_move_lr >= 80:
                     self.move_piece_left()
                     time_since_last_move_lr = current_time
-            elif keys[pygame.K_d]:
+            elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                 current_time = pygame.time.get_ticks()
                 if current_time - time_since_last_move_lr >= 80:
                     self.move_piece_right()
