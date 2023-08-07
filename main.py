@@ -1,4 +1,6 @@
 import random
+import time
+
 import pygame
 from figures import *
 
@@ -14,7 +16,7 @@ WHITE = (255, 255, 255)
 
 class Tetris:
     def __init__(self):
-        self.s_key_pressed = False
+        self.s_key_pressed = None
         self.FALL_SPEED = 30
 
         self.fallen_pieces = []
@@ -167,17 +169,14 @@ class Tetris:
             self.current_piece['x'] = new_x
 
     def fast_down(self):
-        if self.current_piece is not None:
-            new_x = self.current_piece['x']
-            if self.s_key_pressed:
-                self.FALL_SPEED = 2
-            else:
-                self.FALL_SPEED = 30
-
-            if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
-                self.current_piece['x'] = new_x
+        new_x = self.current_piece['x']
+        if self.s_key_pressed:
+            self.FALL_SPEED = 2
         else:
             self.FALL_SPEED = 30
+
+        if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
+            self.current_piece['x'] = new_x
 
     def filled_line(self):
         filled_lines = []
@@ -231,6 +230,7 @@ class Tetris:
     def run(self):
         font = pygame.font.Font(None, 36)
         text = font.render("Next", True, WHITE)
+        start_time = time.time()
 
         self.next_piece = {
             'shape': random.randint(0, len(FIGURES) - 1),
@@ -240,6 +240,8 @@ class Tetris:
         self.next_piece_color = FIGURES_COLOR[self.next_piece['shape']]
 
         self.spawn_piece()
+
+        time_since_last_move_lr = 0  # Add this line
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -247,10 +249,6 @@ class Tetris:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         exit()
-                    elif event.key == pygame.K_a:
-                        self.move_piece_left()
-                    elif event.key == pygame.K_d:
-                        self.move_piece_right()
                     elif event.key == pygame.K_s:
                         self.s_key_pressed = True
                         self.fast_down()
@@ -261,6 +259,18 @@ class Tetris:
                     if event.key == pygame.K_s:
                         self.s_key_pressed = False
                         self.fast_down()
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_a]:
+                current_time = pygame.time.get_ticks()
+                if current_time - time_since_last_move_lr >= 80:
+                    self.move_piece_left()
+                    time_since_last_move_lr = current_time
+            elif keys[pygame.K_d]:
+                current_time = pygame.time.get_ticks()
+                if current_time - time_since_last_move_lr >= 80:
+                    self.move_piece_right()
+                    time_since_last_move_lr = current_time
 
             self.screen.fill((0, 0, 0))
             self.draw_board()
@@ -292,6 +302,15 @@ class Tetris:
 
             self.screen.blit(text, (300, 50))
             self.draw_next_piece(self.next_piece)
+
+            '''temp'''
+            current_time = time.time()
+            elapsed_time = current_time - start_time
+            timer_text = f"Time: {elapsed_time} seconds"  # Convert to int to remove decimals
+
+            font = pygame.font.Font(None, 36)
+            timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text
+            self.screen.blit(timer_surface, (250, 10))
 
             pygame.display.flip()
             self.clock.tick(60)
