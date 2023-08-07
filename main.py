@@ -48,6 +48,7 @@ class Tetris:
                               figure_keys[6]: deque([FIGURES[18]])}
 
         self.points = 0
+        self.hi_points = 0
 
     def draw_board(self):
         for row in range(ROWS):
@@ -159,6 +160,8 @@ class Tetris:
         self.previous_pieces_color = self.current_piece_color
         self.current_piece_color = FIGURES_COLOR[self.current_piece['shape']]
         self.score(0)
+        if y == 0:
+            self.game_over()
 
     def move_piece_left(self):
         new_x = self.current_piece['x'] - 1
@@ -248,6 +251,19 @@ class Tetris:
         text_points = font.render(score_str, True, WHITE)
         self.screen.blit(text_points, (270, 250))
 
+        font_hi_score = pygame.font.Font(None, 30)
+        text_hi_score = font_hi_score.render('High Score: ', True, WHITE)
+        self.screen.blit(text_hi_score, (270, 420))
+        text_hi_score = font.render(str(self.hi_points).zfill(6), True, WHITE)
+        self.screen.blit(text_hi_score, (270, 450))
+
+    def game_over(self):
+        if self.points > self.hi_points:
+            self.hi_points = self.points
+
+        self.points = 0
+        self.game_board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+
     def run(self):
         font = pygame.font.Font(None, 36)
         text_next = font.render("Next", True, WHITE)
@@ -324,6 +340,7 @@ class Tetris:
             self.draw_next_piece(self.next_piece)
 
             self.draw_score()
+
             '''temp'''
             current_time = time.time()
             elapsed_time = current_time - start_time
