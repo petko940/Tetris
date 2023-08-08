@@ -246,15 +246,16 @@ class Tetris:
         self.points += scores[lines]
 
     def draw_score(self):
-        font = pygame.font.Font(None, 45)
+        font = pygame.font.Font(None, 30)
+        font_score = pygame.font.Font('custom_font.ttf', 30)
+
         score_str = str(self.points).zfill(6)
-        text_points = font.render(score_str, True, WHITE)
+        text_points = font_score.render(score_str, True, WHITE)
         self.screen.blit(text_points, (270, 250))
 
-        font_hi_score = pygame.font.Font(None, 30)
-        text_hi_score = font_hi_score.render('High Score: ', True, WHITE)
+        text_hi_score = font.render('High Score', True, WHITE)
         self.screen.blit(text_hi_score, (270, 420))
-        text_hi_score = font.render(str(self.hi_points).zfill(6), True, WHITE)
+        text_hi_score = font_score.render(str(self.hi_points).zfill(6), True, WHITE)
         self.screen.blit(text_hi_score, (270, 450))
 
     def game_over(self):
@@ -348,7 +349,7 @@ class Tetris:
 
             font = pygame.font.Font(None, 36)
             timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
-            self.screen.blit(timer_surface, (250, 10))
+            # self.screen.blit(timer_surface, (250, 10))
             ''''''
 
             pygame.display.flip()
