@@ -67,7 +67,6 @@ class Menu:
         pygame.mixer.stop()
         music_path = "files/music/menu_music.mp3"
         pygame.mixer.music.load(music_path)
-
         pygame.mixer.music.play(-1)
 
         while True:
