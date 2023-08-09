@@ -2,7 +2,7 @@ import random
 import time
 
 import pygame
-from figures import *
+from files.figures import *
 
 pygame.init()
 
@@ -13,10 +13,13 @@ ROWS = 20
 COLS = 10
 WHITE = (255, 255, 255)
 
+font_draw = pygame.font.Font(None, 30)
+font_score = pygame.font.Font('files/custom_font.ttf', 30)
+
 
 class Tetris:
     def __init__(self):
-        self.FALL_SPEED = 30
+        self.FALL_SPEED = 19
 
         self.s_key_pressed = None
 
@@ -39,13 +42,15 @@ class Tetris:
         self.current_figure_to_rotate = None
         self.current_figure = None
 
-        self.rotate_pieces = {figure_keys[0]: deque([FIGURES[0], FIGURES[1]]),
-                              figure_keys[1]: deque([FIGURES[2], FIGURES[3], FIGURES[4], FIGURES[5]]),
-                              figure_keys[2]: deque([FIGURES[6], FIGURES[7]]),
-                              figure_keys[3]: deque([FIGURES[8], FIGURES[9]]),
-                              figure_keys[4]: deque([FIGURES[10], FIGURES[11], FIGURES[12], FIGURES[13]]),
-                              figure_keys[5]: deque([FIGURES[14], FIGURES[15], FIGURES[16], FIGURES[17]]),
-                              figure_keys[6]: deque([FIGURES[18]])}
+        self.rotate_pieces = {
+            figure_keys[0]: deque([FIGURES[0], FIGURES[1]]),
+            figure_keys[1]: deque([FIGURES[2], FIGURES[3], FIGURES[4], FIGURES[5]]),
+            figure_keys[2]: deque([FIGURES[6], FIGURES[7]]),
+            figure_keys[3]: deque([FIGURES[8], FIGURES[9]]),
+            figure_keys[4]: deque([FIGURES[10], FIGURES[11], FIGURES[12], FIGURES[13]]),
+            figure_keys[5]: deque([FIGURES[14], FIGURES[15], FIGURES[16], FIGURES[17]]),
+            figure_keys[6]: deque([FIGURES[18]])
+        }
 
         self.points = 0
         self.hi_points = 0
@@ -64,9 +69,6 @@ class Tetris:
                     ((col * BLOCK_SIZE) + 2, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
                     1,
                 )
-
-        for row in range(ROWS):
-            for col in range(COLS):
                 if self.game_board[row][col]:
                     pygame.draw.rect(
                         self.screen,
@@ -74,12 +76,20 @@ class Tetris:
                         ((col * BLOCK_SIZE) + 2, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
                     )
 
-        if self.current_piece is not None:
-            self.draw_current_figure(
-                self.current_piece['shape'],
-                self.current_piece['x'],
-                self.current_piece['y']
-            )
+        # for row in range(ROWS):
+        #     for col in range(COLS):
+        #         if self.game_board[row][col]:
+        #             pygame.draw.rect(
+        #                 self.screen,
+        #                 self.game_board[row][col],
+        #                 ((col * BLOCK_SIZE) + 2, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+        #             )
+
+        # self.draw_current_figure(
+        #     self.current_piece['shape'],
+        #     self.current_piece['x'],
+        #     self.current_piece['y']
+        # )
 
     def draw_current_figure(self, figure, x, y):
         shape = FIGURES[figure]
@@ -178,7 +188,7 @@ class Tetris:
         if self.s_key_pressed:
             self.FALL_SPEED = 2
         else:
-            self.FALL_SPEED = 30
+            self.FALL_SPEED = 19
 
         if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
             self.current_piece['x'] = new_x
@@ -246,14 +256,11 @@ class Tetris:
         self.points += scores[lines]
 
     def draw_score(self):
-        font = pygame.font.Font(None, 30)
-        font_score = pygame.font.Font('custom_font.ttf', 30)
-
         score_str = str(self.points).zfill(6)
         text_points = font_score.render(score_str, True, WHITE)
         self.screen.blit(text_points, (270, 250))
 
-        text_hi_score = font.render('High Score', True, WHITE)
+        text_hi_score = font_draw.render('High Score', True, WHITE)
         self.screen.blit(text_hi_score, (270, 420))
         text_hi_score = font_score.render(str(self.hi_points).zfill(6), True, WHITE)
         self.screen.blit(text_hi_score, (270, 450))
@@ -349,12 +356,9 @@ class Tetris:
 
             font = pygame.font.Font(None, 36)
             timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
-            # self.screen.blit(timer_surface, (250, 10))
+            self.screen.blit(timer_surface, (250, 10))
             ''''''
 
             pygame.display.flip()
             self.clock.tick(60)
 
-
-game = Tetris()
-game.run()
