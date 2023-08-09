@@ -1,6 +1,6 @@
 import pygame
 
-from main import Tetris
+from game import Tetris
 
 pygame.init()
 
