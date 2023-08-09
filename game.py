@@ -4,6 +4,7 @@ import pygame
 from files.figures import *
 from hi_score import hi_score
 
+
 pygame.init()
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 501
