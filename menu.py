@@ -1,7 +1,5 @@
 import pygame
 
-from game import Tetris
-
 pygame.init()
 
 SCREEN_WIDTH = 400
@@ -45,7 +43,7 @@ class Menu:
             countdown_rect = countdown_text.get_rect(center=self.screen.get_rect().center)
             self.screen.blit(countdown_text, countdown_rect)
             pygame.display.flip()
-            pygame.time.wait(600)
+            pygame.time.wait(650)
 
         self.screen.fill(BLACK)
         pygame.display.flip()
@@ -65,8 +63,11 @@ class Menu:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button_rect.collidepoint(event.pos):
                         self.countdown_start()
+
+                        from game import Tetris
                         game = Tetris()
                         game.run()
+
                     elif self.exit_button_rect.collidepoint(event.pos):
                         image_paths = [
                             "files/exit_images/1.png",
@@ -80,13 +81,13 @@ class Menu:
             self.screen.blit(self.background, (0, 0))
 
             self.draw_buttons(
-                self.start_button_rect.x,
-                self.start_button_rect.y,
+                155,
+                223,
                 start_surface
             )
             self.draw_buttons(
-                self.exit_button_rect.x,
-                self.exit_button_rect.y,
+                165,
+                280,
                 exit_surface
             )
 

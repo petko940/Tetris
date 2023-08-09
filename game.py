@@ -1,6 +1,5 @@
 import random
 import time
-
 import pygame
 from files.figures import *
 
@@ -76,21 +75,6 @@ class Tetris:
                         ((col * BLOCK_SIZE) + 2, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
                     )
 
-        # for row in range(ROWS):
-        #     for col in range(COLS):
-        #         if self.game_board[row][col]:
-        #             pygame.draw.rect(
-        #                 self.screen,
-        #                 self.game_board[row][col],
-        #                 ((col * BLOCK_SIZE) + 2, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
-        #             )
-
-        # self.draw_current_figure(
-        #     self.current_piece['shape'],
-        #     self.current_piece['x'],
-        #     self.current_piece['y']
-        # )
-
     def draw_current_figure(self, figure, x, y):
         shape = FIGURES[figure]
         for row in range(len(shape)):
@@ -111,11 +95,12 @@ class Tetris:
     def draw_next_piece(self, next_piece):
         next_piece_color = FIGURES_COLOR[next_piece['shape']]
         shape = FIGURES[next_piece['shape']]
+
         for row in range(len(shape)):
             for col in range(len(shape[0])):
                 if shape[row][col]:
                     rect = pygame.Rect(
-                        (col + COLS + 2) * BLOCK_SIZE,
+                        (col + COLS + 2) * BLOCK_SIZE - 10,
                         (row + 4) * BLOCK_SIZE,
                         BLOCK_SIZE,
                         BLOCK_SIZE,
@@ -125,6 +110,20 @@ class Tetris:
                         next_piece_color,
                         rect,
                     )
+
+        '''Border of next piece'''
+        width = len(shape[0]) * BLOCK_SIZE + 20
+        height = len(shape) * BLOCK_SIZE + 20
+
+        border_x = (COLS + 2) * BLOCK_SIZE - BLOCK_SIZE * 0.25 - 13
+        border_y = 4 * BLOCK_SIZE - BLOCK_SIZE * 0.25 - 3
+
+        pygame.draw.rect(
+            self.screen,
+            (255, 255, 255),  # White color
+            pygame.Rect(border_x, border_y, width, height),
+            1  # Border width
+        )
 
     def spawn_piece(self):
         self.current_piece = {
@@ -270,7 +269,9 @@ class Tetris:
             self.hi_points = self.points
 
         self.points = 0
-        self.game_board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+        from menu import Menu
+        menu = Menu()
+        menu.run()
 
     def run(self):
         font = pygame.font.Font(None, 36)
@@ -356,7 +357,7 @@ class Tetris:
 
             font = pygame.font.Font(None, 36)
             timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
-            self.screen.blit(timer_surface, (250, 10))
+            # self.screen.blit(timer_surface, (250, 10))
             ''''''
 
             pygame.display.flip()
