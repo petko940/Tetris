@@ -2,9 +2,9 @@ import random
 import time
 import pygame
 from files.figures import *
+from hi_score import hi_score
 
 pygame.init()
-
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 501
 BLOCK_SIZE = 25
@@ -52,7 +52,6 @@ class Tetris:
         }
 
         self.points = 0
-        self.hi_points = 0
 
     def draw_board(self):
         for row in range(ROWS):
@@ -261,19 +260,50 @@ class Tetris:
 
         text_hi_score = font_draw.render('High Score', True, WHITE)
         self.screen.blit(text_hi_score, (270, 420))
-        text_hi_score = font_score.render(str(self.hi_points).zfill(6), True, WHITE)
+        text_hi_score = font_score.render(str(hi_score).zfill(6), True, WHITE)
         self.screen.blit(text_hi_score, (270, 450))
 
     def game_over(self):
-        if self.points > self.hi_points:
-            self.hi_points = self.points
+        global hi_score
+        if self.points > hi_score:
+            hi_score = self.points
 
         self.points = 0
+        game_over_image = pygame.image.load("files/game_over.jpg")
+
+        return_to_menu = False
+
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("files/music/hi-score-music.mp3")
+        pygame.mixer.music.play(-1)
+        while not return_to_menu:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    return_to_menu = True
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    return_to_menu = True
+
+            self.screen.fill((0, 0, 0))
+            self.screen.blit(game_over_image, (0, 0))
+
+            hi_score_text = font_draw.render(f'High Score: {hi_score}', False, WHITE)
+            self.screen.blit(hi_score_text, (130, 220))
+            press_any_key_text = font_draw.render('Press any key to return to menu...', False, WHITE)
+            self.screen.blit(press_any_key_text, (30, 280))
+
+            pygame.display.flip()
+
         from menu import Menu
         menu = Menu()
         menu.run()
 
     def run(self):
+        # TODO add game over info for hi score
+        path = "files/music/in_game_music.mp3"
+        pygame.mixer.music.load(path)
+        pygame.mixer.music.play(-1)
         font = pygame.font.Font(None, 36)
         text_next = font.render("Next", True, WHITE)
         start_time = time.time()
@@ -362,4 +392,3 @@ class Tetris:
 
             pygame.display.flip()
             self.clock.tick(60)
-
