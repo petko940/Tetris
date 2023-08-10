@@ -1,12 +1,13 @@
+import sys
 import pygame
-
 import score_manager
 
 pygame.init()
 
+
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 501
-FONT = pygame.font.Font("files/menu_font.ttf", 29)
+FONT = pygame.font.Font("files/other/menu_font.ttf", 29)
 YELLOW = (255, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -19,18 +20,19 @@ PURPLE = (128, 0, 128)
 start_surface = FONT.render("START", True, YELLOW)
 exit_surface = FONT.render("EXIT", True, RED)
 
-MENU_FONT = pygame.font.Font("files/menu_font.ttf", 25)
+MENU_FONT = pygame.font.Font("files/other/menu_font.ttf", 25)
 
 
 class Menu:
     def __init__(self):
+        pygame.display.set_caption('Tetris')
         self.last_color_change_time = pygame.time.get_ticks()
         self.text_colors = [RED, ORANGE, YELLOW, GREEN, LIGHT_BLUE, PURPLE]
         self.current_color_index = 0
         self.current_color = self.text_colors[self.current_color_index]
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.background = pygame.image.load('files/menu_image.png')
+        self.background = pygame.image.load('files/other/menu_image.png')
         self.start_button_rect = pygame.Rect(155, 230, 89, 22)
         self.exit_button_rect = pygame.Rect(165, 287, 68, 22)
 
@@ -71,7 +73,8 @@ class Menu:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
+                    sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button_rect.collidepoint(event.pos):
                         self.countdown_start()
@@ -93,7 +96,8 @@ class Menu:
                         ]
                         images = [pygame.image.load(path) for path in image_paths]
                         self.exit_images(images)
-                        exit()
+                        pygame.quit()
+                        sys.exit()
 
             self.screen.blit(self.background, (0, 0))
 

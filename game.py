@@ -1,7 +1,8 @@
 import random
-import time
+import sys
+
 import pygame
-from files.figures import *
+from files.other.figures import *
 import score_manager
 
 pygame.init()
@@ -13,7 +14,7 @@ COLS = 10
 WHITE = (255, 255, 255)
 
 font_draw = pygame.font.Font(None, 30)
-font_score = pygame.font.Font('files/custom_font.ttf', 30)
+font_score = pygame.font.Font('files/other/custom_font.ttf', 30)
 font_lines = pygame.font.Font(None, 36)
 
 font_combo = pygame.font.Font(None, 36)
@@ -292,7 +293,7 @@ class Tetris:
             score_manager.hi_score = self.points
 
         self.points = 0
-        game_over_image = pygame.image.load("files/game_over.jpg")
+        game_over_image = pygame.image.load("files/other/game_over.jpg")
 
         return_to_menu = False
 
@@ -368,10 +369,12 @@ class Tetris:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
+                    sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
+                        sys.exit()
                     elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                         self.s_key_pressed = True
                         self.fast_down()
