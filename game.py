@@ -16,9 +16,17 @@ font_draw = pygame.font.Font(None, 30)
 font_score = pygame.font.Font('files/custom_font.ttf', 30)
 font_lines = pygame.font.Font(None, 36)
 
+font_combo = pygame.font.Font(None, 36)
+
+comboX1_font = pygame.font.Font(None, 36)
+comboX2_font = pygame.font.Font(None, 41)
+comboX3_font = pygame.font.Font(None, 46)
+comboX4_font = pygame.font.Font(None, 51)
+
 
 class Tetris:
     def __init__(self):
+        self.last_combo_display_time = None
         self.FALL_SPEED = 19
 
         self.s_key_pressed = None
@@ -54,6 +62,8 @@ class Tetris:
 
         self.points = 0
         self.lines = 0
+        self.combo = 0
+        self.show_combo = True
 
     def draw_board(self):
         for row in range(ROWS):
@@ -148,6 +158,7 @@ class Tetris:
         else:
             self.lock_piece()
             self.spawn_piece()
+            self.show_combo = False
 
     def check_collision(self, figure, x, y):
         shape = FIGURES[figure]
@@ -267,10 +278,10 @@ class Tetris:
 
     def draw_lines(self, num_lines):
         text_lines = font_lines.render('Lines: ', True, WHITE)
-        self.screen.blit(text_lines, (270, 275))
+        self.screen.blit(text_lines, (270, 285))
 
         number_lines = font_score.render(str(num_lines), True, WHITE)
-        self.screen.blit(number_lines, (370, 273))
+        self.screen.blit(number_lines, (370, 283))
 
     def game_over(self):
         if self.points > score_manager.hi_score:
@@ -308,10 +319,27 @@ class Tetris:
         menu.run()
 
     def combos(self, number):
-        pass
+        text_combo = font_combo.render(f"Combo:", True, WHITE)
+        self.screen.blit(text_combo, (260, 350))
+
+        if self.combo == 1:
+            GREEN = (0, 255, 0)
+            text_combo = comboX1_font.render(f"1X", True, GREEN)
+            self.screen.blit(text_combo, (355, 350))
+        elif self.combo == 2:
+            ORANGE = (255, 165, 0)
+            text_combo = comboX2_font.render(f"2X", True, ORANGE)
+            self.screen.blit(text_combo, (355, 350))
+        elif self.combo == 3:
+            RED = (255, 0, 0)
+            text_combo = comboX3_font.render(f"3X", True, RED)
+            self.screen.blit(text_combo, (355, 350))
+        elif self.combo == 4:
+            PURPLE = (255, 0, 255)
+            text_combo = comboX4_font.render(f"4X", True, PURPLE)
+            self.screen.blit(text_combo, (355, 350))
 
     def run(self):
-        # TODO add game over info for hi score
         path = "files/music/in_game_music.mp3"
         pygame.mixer.music.load(path)
         pygame.mixer.music.play(-1)
@@ -373,9 +401,12 @@ class Tetris:
                 self.time_since_last_fall = 0
 
             self.draw_lines(self.lines)
+
             filled_lines = self.filled_line()
             if filled_lines:
                 self.score(len(filled_lines))
+                self.combo += 1
+                self.show_combo = True
                 if len(filled_lines) == 1:
                     self.lines += 1
                 elif len(filled_lines) == 2:
@@ -384,6 +415,12 @@ class Tetris:
                     self.lines += 3
                 elif len(filled_lines) == 4:
                     self.lines += 4
+
+            if self.show_combo:
+                self.combos(self.combo)
+            else:
+                self.points += self.combo * 50
+                self.combo = 0
 
             if self.current_piece is None:
                 self.spawn_piece()
@@ -414,4 +451,4 @@ class Tetris:
             self.clock.tick(60)
 
 
-Tetris().run()
+# Tetris().run()
