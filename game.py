@@ -14,6 +14,7 @@ WHITE = (255, 255, 255)
 
 font_draw = pygame.font.Font(None, 30)
 font_score = pygame.font.Font('files/custom_font.ttf', 30)
+font_lines = pygame.font.Font(None, 36)
 
 
 class Tetris:
@@ -52,6 +53,7 @@ class Tetris:
         }
 
         self.points = 0
+        self.lines = 0
 
     def draw_board(self):
         for row in range(ROWS):
@@ -256,12 +258,19 @@ class Tetris:
     def draw_score(self):
         score_str = str(self.points).zfill(6)
         text_points = font_score.render(score_str, True, WHITE)
-        self.screen.blit(text_points, (270, 250))
+        self.screen.blit(text_points, (270, 220))
 
         text_hi_score = font_draw.render('High Score', True, WHITE)
         self.screen.blit(text_hi_score, (270, 420))
         text_hi_score = font_score.render(str(score_manager.hi_score).zfill(6), True, WHITE)
         self.screen.blit(text_hi_score, (270, 450))
+
+    def draw_lines(self, num_lines):
+        text_lines = font_lines.render('Lines: ', True, WHITE)
+        self.screen.blit(text_lines, (270, 275))
+
+        number_lines = font_score.render(str(num_lines), True, WHITE)
+        self.screen.blit(number_lines, (370, 273))
 
     def game_over(self):
         if self.points > score_manager.hi_score:
@@ -297,6 +306,9 @@ class Tetris:
         from menu import Menu
         menu = Menu()
         menu.run()
+
+    def combos(self, number):
+        pass
 
     def run(self):
         # TODO add game over info for hi score
@@ -360,9 +372,18 @@ class Tetris:
                 self.move_piece_down()
                 self.time_since_last_fall = 0
 
+            self.draw_lines(self.lines)
             filled_lines = self.filled_line()
             if filled_lines:
                 self.score(len(filled_lines))
+                if len(filled_lines) == 1:
+                    self.lines += 1
+                elif len(filled_lines) == 2:
+                    self.lines += 2
+                elif len(filled_lines) == 3:
+                    self.lines += 3
+                elif len(filled_lines) == 4:
+                    self.lines += 4
 
             if self.current_piece is None:
                 self.spawn_piece()
@@ -391,3 +412,6 @@ class Tetris:
 
             pygame.display.flip()
             self.clock.tick(60)
+
+
+Tetris().run()
