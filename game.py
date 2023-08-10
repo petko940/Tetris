@@ -2,8 +2,7 @@ import random
 import time
 import pygame
 from files.figures import *
-from hi_score import hi_score
-
+import score_manager
 
 pygame.init()
 SCREEN_WIDTH = 400
@@ -261,13 +260,12 @@ class Tetris:
 
         text_hi_score = font_draw.render('High Score', True, WHITE)
         self.screen.blit(text_hi_score, (270, 420))
-        text_hi_score = font_score.render(str(hi_score).zfill(6), True, WHITE)
+        text_hi_score = font_score.render(str(score_manager.hi_score).zfill(6), True, WHITE)
         self.screen.blit(text_hi_score, (270, 450))
 
     def game_over(self):
-        global hi_score
-        if self.points > hi_score:
-            hi_score = self.points
+        if self.points > score_manager.hi_score:
+            score_manager.hi_score = self.points
 
         self.points = 0
         game_over_image = pygame.image.load("files/game_over.jpg")
@@ -289,7 +287,7 @@ class Tetris:
             self.screen.fill((0, 0, 0))
             self.screen.blit(game_over_image, (0, 0))
 
-            hi_score_text = font_draw.render(f'High Score: {hi_score}', False, WHITE)
+            hi_score_text = font_draw.render(f'High Score: {score_manager.hi_score}', False, WHITE)
             self.screen.blit(hi_score_text, (130, 220))
             press_any_key_text = font_draw.render('Press any key to return to menu...', False, WHITE)
             self.screen.blit(press_any_key_text, (30, 280))
@@ -388,7 +386,7 @@ class Tetris:
 
             font = pygame.font.Font(None, 36)
             timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
-            # self.screen.blit(timer_surface, (250, 10))
+            self.screen.blit(timer_surface, (250, 10))
             ''''''
 
             pygame.display.flip()

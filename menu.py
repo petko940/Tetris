@@ -1,6 +1,6 @@
 import pygame
 
-from hi_score import hi_score
+import score_manager
 
 pygame.init()
 
@@ -109,8 +109,6 @@ class Menu:
                 exit_surface
             )
 
-            from game import font_score
-
             text_score = MENU_FONT.render('HI-SCORE', True, GREEN)
             self.screen.blit(text_score, (7, 250))
 
@@ -122,10 +120,11 @@ class Menu:
                 self.current_color_index = (self.current_color_index + 1) % len(self.text_colors)
                 self.current_color = self.text_colors[self.current_color_index]
 
+            from game import font_score
             text_score = MENU_FONT.render('HI-SCORE', True, self.current_color)
             self.screen.blit(text_score, (7, 250))
 
-            hi_score_text = font_score.render(f'{str(hi_score).zfill(6)}', False, self.current_color)
+            hi_score_text = font_score.render(f'{str(score_manager.hi_score).zfill(6)}', False, self.current_color)
             self.screen.blit(hi_score_text, (280, 250))
 
             pygame.display.flip()
