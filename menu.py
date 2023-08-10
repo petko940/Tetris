@@ -38,10 +38,9 @@ class Menu:
         self.screen.blit(surface, (x, y))
 
     def countdown_start(self):
-        pygame.mixer.music.stop()
         path = "files/music/countdown.mp3"
-        pygame.mixer.music.load(path)
-        pygame.mixer.music.play()
+        channel = pygame.mixer.Channel(1)
+        channel.play(pygame.mixer.Sound(path))
 
         font = pygame.font.Font(None, 150)
 
