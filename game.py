@@ -63,7 +63,7 @@ class Tetris:
         self.points = 0
         self.lines = 0
         self.combo = 0
-        self.show_combo = True
+        self.show_combo = False
 
     def draw_board(self):
         for row in range(ROWS):
@@ -219,6 +219,10 @@ class Tetris:
         return filled_lines
 
     def destroy_effect(self, rows):
+        destroy_line_music_path = 'files/music/destroy_line.mp3'
+        music_channel = pygame.mixer.Channel(1)
+        music_channel.play(pygame.mixer.Sound(destroy_line_music_path))
+
         for row in rows:
             self.game_board[row] = [self.previous_pieces_color for _ in range(COLS)]
 
@@ -278,10 +282,10 @@ class Tetris:
 
     def draw_lines(self, num_lines):
         text_lines = font_lines.render('Lines: ', True, WHITE)
-        self.screen.blit(text_lines, (270, 285))
+        self.screen.blit(text_lines, (264, 285))
 
         number_lines = font_score.render(str(num_lines), True, WHITE)
-        self.screen.blit(number_lines, (370, 283))
+        self.screen.blit(number_lines, (344, 283))
 
     def game_over(self):
         if self.points > score_manager.hi_score:
@@ -309,8 +313,12 @@ class Tetris:
 
             hi_score_text = font_draw.render(f'High Score: {score_manager.hi_score}', False, WHITE)
             self.screen.blit(hi_score_text, (130, 220))
+
+            lines_destroyed = font_draw.render(f'Lines Destroyed: {self.lines}', False, WHITE)
+            self.screen.blit(lines_destroyed, (110, 257))
+
             press_any_key_text = font_draw.render('Press any key to return to menu...', False, WHITE)
-            self.screen.blit(press_any_key_text, (30, 280))
+            self.screen.blit(press_any_key_text, (30, 297))
 
             pygame.display.flip()
 
@@ -449,6 +457,3 @@ class Tetris:
 
             pygame.display.flip()
             self.clock.tick(60)
-
-
-# Tetris().run()
