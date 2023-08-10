@@ -445,15 +445,15 @@ class Tetris:
 
             self.draw_score()
 
-            '''temp'''
-            current_time = time.time()
-            elapsed_time = current_time - start_time
-            timer_text = f"Time: {elapsed_time} seconds"  # Convert to int to remove decimals
-
-            font = pygame.font.Font(None, 36)
-            timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
-            self.screen.blit(timer_surface, (250, 10))
-            ''''''
+            # '''temp'''
+            # current_time = time.time()
+            # elapsed_time = current_time - start_time
+            # timer_text = f"Time: {elapsed_time} seconds"  # Convert to int to remove decimals
+            #
+            # font = pygame.font.Font(None, 36)
+            # timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
+            # self.screen.blit(timer_surface, (250, 10))
+            # ''''''
 
             pygame.display.flip()
             self.clock.tick(60)
