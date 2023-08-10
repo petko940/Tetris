@@ -326,7 +326,7 @@ class Tetris:
         menu = Menu()
         menu.run()
 
-    def combos(self, number):
+    def combos(self):
         text_combo = font_combo.render(f"Combo:", True, WHITE)
         self.screen.blit(text_combo, (260, 350))
 
@@ -353,7 +353,7 @@ class Tetris:
         pygame.mixer.music.play(-1)
         font = pygame.font.Font(None, 36)
         text_next = font.render("Next", True, WHITE)
-        start_time = time.time()
+        # start_time = time.time()
 
         self.next_piece = {
             'shape': random.randint(0, len(FIGURES) - 1),
@@ -425,7 +425,7 @@ class Tetris:
                     self.lines += 4
 
             if self.show_combo:
-                self.combos(self.combo)
+                self.combos()
             else:
                 self.points += self.combo * 50
                 self.combo = 0
