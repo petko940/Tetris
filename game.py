@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 import pygame
 from files.other.figures import *
@@ -303,7 +304,8 @@ class Tetris:
         while not return_to_menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
+                    sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     return_to_menu = True
                 elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -354,7 +356,7 @@ class Tetris:
         pygame.mixer.music.play(-1)
         font = pygame.font.Font(None, 36)
         text_next = font.render("Next", True, WHITE)
-        # start_time = time.time()
+        start_time = time.time()
 
         self.next_piece = {
             'shape': random.randint(0, len(FIGURES) - 1),
@@ -378,7 +380,7 @@ class Tetris:
                     elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                         self.s_key_pressed = True
                         self.fast_down()
-                    elif event.key == pygame.K_SPACE:
+                    elif event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                         self.rotate_piece()
 
                 elif event.type == pygame.KEYUP:
