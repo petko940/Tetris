@@ -17,4 +17,4 @@ Use my code from github (use only pygame) or download installer.
 
 [VirusTotal](https://www.virustotal.com/gui/file/97a0d84d2df8271a545d522be7ed2a4b92850ca5b4c74592458509d254024ee6/community)
 
-Happe fun
+Have fun
