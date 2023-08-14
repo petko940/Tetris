@@ -25,11 +25,13 @@ comboX2_font = pygame.font.Font(None, 41)
 comboX3_font = pygame.font.Font(None, 46)
 comboX4_font = pygame.font.Font(None, 51)
 
+start_time = time.time()
+
 
 class Tetris:
     def __init__(self):
         self.last_combo_display_time = None
-        self.FALL_SPEED = 19
+        self.FALL_SPEED = 20
 
         self.s_key_pressed = None
 
@@ -201,7 +203,7 @@ class Tetris:
         if self.s_key_pressed:
             self.FALL_SPEED = 2
         else:
-            self.FALL_SPEED = 19
+            self.FALL_SPEED = 20
 
         if not self.check_collision(self.current_piece['shape'], new_x, self.current_piece['y']):
             self.current_piece['x'] = new_x
@@ -356,7 +358,6 @@ class Tetris:
         pygame.mixer.music.play(-1)
         font = pygame.font.Font(None, 36)
         text_next = font.render("Next", True, WHITE)
-        start_time = time.time()
 
         self.next_piece = {
             'shape': random.randint(0, len(FIGURES) - 1),
@@ -450,15 +451,15 @@ class Tetris:
 
             self.draw_score()
 
-            # '''temp'''
-            # current_time = time.time()
-            # elapsed_time = current_time - start_time
-            # timer_text = f"Time: {elapsed_time} seconds"  # Convert to int to remove decimals
-            #
-            # font = pygame.font.Font(None, 36)
-            # timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
+            '''temp'''
+            current_time = time.time()
+            elapsed_time = current_time - start_time
+            timer_text = f"Time: {elapsed_time} seconds"  # Convert to int to remove decimals
+
+            font = pygame.font.Font(None, 36)
+            timer_surface = font.render(timer_text, True, (255, 255, 255))  # White text_next
             # self.screen.blit(timer_surface, (250, 10))
-            # ''''''
+            ''''''
 
             pygame.display.flip()
             self.clock.tick(60)
