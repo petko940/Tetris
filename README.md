@@ -1,6 +1,8 @@
 # Tetris
 
-https://github.com/petko940/Tetris/assets/100520661/3223ec6a-4848-44ba-9360-375d5b449dc5
+
+https://github.com/petko940/Tetris/assets/100520661/33b05eab-d248-4fcb-8b88-5709dc4029d0
+
 
 ## KEYS
 - **Left Arrow or A**: Move the falling tetromino (block) to the left.
