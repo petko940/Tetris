@@ -352,6 +352,25 @@ class Tetris:
             text_combo = comboX4_font.render(f"4X", True, PURPLE)
             self.screen.blit(text_combo, (355, 350))
 
+        """edno ribarche dade coda
+        text_combo = font_combo.render(f"Combo:", True, WHITE)
+        self.screen.blit(text_combo, (260, 350))
+
+        combos = {
+            1: {"color": (0, 255, 0), "text": "1X", "font": comboX1_font},
+            2: {"color": (255, 165, 0), "text": "2X", "font": comboX2_font},
+            3: {"color": (255, 0, 0), "text": "3X", "font": comboX3_font},
+            4: {"color": (255, 0, 255), "text": "4X", "font": comboX4_font},
+            "pos": (355, 350),
+        }
+
+        color = combos[self.combo]["color"]
+        message = combos[self.combo]["text"]
+        text_combo = combos[self.combo]["font"].render(message, True, color)
+
+        self.screen.blit(text_combo, combos["pos"])
+        """
+
     def run(self):
         path = "files/music/in_game_music.mp3"
         pygame.mixer.music.load(path)
