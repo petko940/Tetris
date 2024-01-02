@@ -46,23 +46,40 @@ class Menu:
 
         font = pygame.font.Font(None, 150)
 
+        countdown_interval = 600
+        current_time = pygame.time.get_ticks()
+
         for i in range(3, 0, -1):
             self.screen.fill(BLACK)
             countdown_text = font.render(str(i), True, WHITE)
             countdown_rect = countdown_text.get_rect(center=self.screen.get_rect().center)
             self.screen.blit(countdown_text, countdown_rect)
             pygame.display.flip()
-            pygame.time.wait(650)
+
+            while pygame.time.get_ticks() - current_time < countdown_interval:
+                pygame.event.pump()
+
+            current_time += countdown_interval
 
         self.screen.fill(BLACK)
         pygame.display.flip()
 
     def exit_images(self, images):
-        for image in images:
+        clock = pygame.time.Clock()
+        delay = 600
+
+        for i in range(len(images)):
             self.screen.fill(BLACK)
-            self.screen.blit(image, (0, 0))
+            self.screen.blit(images[i], (0, 0))
             pygame.display.flip()
-            pygame.time.wait(600)
+
+            start_time = pygame.time.get_ticks()
+            elapsed_time = 0
+
+            while elapsed_time < delay:
+                pygame.event.pump()
+                clock.tick(30)
+                elapsed_time = pygame.time.get_ticks() - start_time
 
     def run(self):
         pygame.mixer.stop()
