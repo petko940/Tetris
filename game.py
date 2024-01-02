@@ -247,22 +247,39 @@ class Tetris:
                 break
             rotate_times += 1
 
-        self.rotate_pieces[self.current_figure_to_rotate].rotate(-rotate_times - 1)
+        temp_shape_index = (self.rotate_pieces[self.current_figure_to_rotate].index(
+            self.current_figure) + rotate_times + 1) % len(self.rotate_pieces[self.current_figure_to_rotate])
 
-        new_shape = self.rotate_pieces[self.current_figure_to_rotate][0]
-        new_x, new_y = self.current_piece['x'], self.current_piece['y']
-        if new_x < 0:
-            new_x = 0
-        elif new_x + len(new_shape[0]) > COLS:
-            new_x = COLS - len(new_shape[0])
+        temp_shape = self.rotate_pieces[self.current_figure_to_rotate][temp_shape_index]
 
-        if new_y + len(new_shape) > ROWS:
-            new_y = ROWS - len(new_shape)
+        temp_x, temp_y = self.current_piece['x'], self.current_piece['y']
+        if temp_x < 0:
+            temp_x = 0
+        elif temp_x + len(temp_shape) > COLS:
+            temp_x = COLS - len(temp_shape)
 
-        self.current_piece['shape'] = FIGURES.index(new_shape)
-        self.current_piece['x'] = new_x
-        self.current_piece['y'] = new_y
-        self.draw_board()
+        if temp_y < 0:
+            temp_y = 0
+        elif temp_y + len(temp_shape) > ROWS:
+            temp_y = ROWS - len(temp_shape)
+
+        if not self.check_collision(temp_shape_index, temp_x, temp_y):
+            self.rotate_pieces[self.current_figure_to_rotate].rotate(-rotate_times - 1)
+
+            new_shape = self.rotate_pieces[self.current_figure_to_rotate][0]
+            new_x, new_y = self.current_piece['x'], self.current_piece['y']
+            if new_x < 0:
+                new_x = 0
+            elif new_x + len(new_shape[0]) > COLS:
+                new_x = COLS - len(new_shape[0])
+
+            if new_y + len(new_shape) > ROWS:
+                new_y = ROWS - len(new_shape)
+
+            self.current_piece['shape'] = FIGURES.index(new_shape)
+            self.current_piece['x'] = new_x
+            self.current_piece['y'] = new_y
+            self.draw_board()
 
     def score(self, lines):
         scores = {
